@@ -16,4 +16,4 @@ if __name__ == '__main__':
     result = practice.delay(i, dic[i])
     print(result)
 
-    time.sleep(5)
+    time.sleep(3)

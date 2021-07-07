@@ -1,5 +1,6 @@
 import os
-from flask import Flask, request, render_template, session
+from flask import Flask, request, render_template, session, flash, redirect
+from flask.helpers import url_for
 from flask_mail import Mail, Message
 from celery import Celery
 
@@ -52,4 +53,11 @@ def index():
   }
   if request.form['submit'] == 'Send':
     # send right away
-    
+    send_async_email.delay(email_data)
+    flash('Sending email to {0}'.format(email))
+  else:
+    # send in one minute
+    send_async_email.apply_async(args=[email_data], countdown=60)
+    flash('An email will be sent to {0} in one minute'.format(email))
+
+  return redirect(url_for('index'))
